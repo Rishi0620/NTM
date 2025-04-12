@@ -9,21 +9,21 @@ class ReadHead(nn.Module):
         self.N, self.M = memory.N, memory.M
 
         self.key_gen = nn.Linear(controller_output_size, self.M)
-        self.beta_gen = nn.Linear(controller_output_size, 1)  # strength
+        self.beta_gen = nn.Linear(controller_output_size, 1)
 
     def forward(self, controller_output):
-        key = torch.tanh(self.key_gen(controller_output))            # (batch, M)
-        beta = F.softplus(self.beta_gen(controller_output)) + 1e-5   # (batch, 1)
+        key = torch.tanh(self.key_gen(controller_output))
+        beta = F.softplus(self.beta_gen(controller_output)) + 1e-5
 
         # Cosine similarity
-        mem = self.memory.memory  # (batch, N, M)
-        key = key.unsqueeze(1)    # (batch, 1, M)
+        mem = self.memory.memory
+        key = key.unsqueeze(1)
         norm_mem = F.normalize(mem, dim=2)
         norm_key = F.normalize(key, dim=2)
-        sim = torch.bmm(norm_mem, norm_key.transpose(1, 2)).squeeze(2)  # (batch, N)
+        sim = torch.bmm(norm_mem, norm_key.transpose(1, 2)).squeeze(2)
 
         weights = F.softmax(beta * sim, dim=1)
-        read_vec = self.memory.read(weights)  # (batch, M)
+        read_vec = self.memory.read(weights)
 
         return read_vec, weights
 
@@ -50,8 +50,8 @@ class WriteHead(nn.Module):
         sim = torch.bmm(norm_mem, norm_key.transpose(1, 2)).squeeze(2)
         weights = F.softmax(beta * sim, dim=1)
 
-        erase = torch.sigmoid(self.erase_gen(controller_output))  # (batch, M)
-        add = torch.tanh(self.add_gen(controller_output))          # (batch, M)
+        erase = torch.sigmoid(self.erase_gen(controller_output))
+        add = torch.tanh(self.add_gen(controller_output))
 
         self.memory.write(weights, erase, add)
         return weights

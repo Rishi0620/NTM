@@ -6,13 +6,11 @@ import numpy as np
 from tqdm import tqdm
 import argparse
 
-# === Command line args ===
 parser = argparse.ArgumentParser()
 parser.add_argument('--task', choices=['reverse', 'duplicate', 'repeat'], default='reverse')
 parser.add_argument('--repeat_n', type=int, default=3)
 args = parser.parse_args()
 
-# === Config ===
 INPUT_SIZE = 1
 OUTPUT_SIZE = 1
 SEQ_LEN = 5
@@ -22,8 +20,6 @@ LEARNING_RATE = 1e-4
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
-# Wrapper for NTM that handles variable output lengths
 class NTMWrapper(nn.Module):
     def __init__(self, ntm):
         super().__init__()
@@ -39,7 +35,6 @@ class NTMWrapper(nn.Module):
 
         outputs = []
         for i in range(output_length):
-            # For sequence tasks, we can feed zeros after the initial input
             if i < x.size(1):
                 inp = x[:, i:i + 1, :]
             else:
@@ -51,7 +46,6 @@ class NTMWrapper(nn.Module):
         return torch.cat(outputs, dim=1)
 
 
-# Initialize original NTM and wrap it
 base_ntm = NTM(INPUT_SIZE, OUTPUT_SIZE).to(device)
 ntm = NTMWrapper(base_ntm).to(device)
 
@@ -99,5 +93,4 @@ for epoch in tqdm(range(1, EPOCHS + 1)):
         print("Target:    ", y.squeeze().cpu().numpy())
         print("Prediction:", output.squeeze().detach().cpu().numpy())
 
-# Save model
 torch.save(base_ntm.state_dict(), f"ntm_translate_{args.task}.pth")

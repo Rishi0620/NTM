@@ -24,15 +24,9 @@ class NTM(nn.Module):
     def reset(self, batch_size=1):
         self.memory.reset(batch_size)
         self.controller.reset(batch_size)
-
-        # Initialize with uniform attention over memory
         self.read_vector = torch.zeros(batch_size, self.M)
 
     def forward(self, x_seq):
-        """
-        x_seq: (batch, seq_len, input_size)
-        returns: (batch, seq_len, output_size)
-        """
         batch_size, seq_len, _ = x_seq.size()
         self.reset(batch_size)
 
@@ -44,14 +38,11 @@ class NTM(nn.Module):
 
             ctrl_out, _ = self.controller(controller_input)
 
-            # Write to memory
             _ = self.write_head(ctrl_out)
 
-            # Read from memory
             self.read_vector, _ = self.read_head(ctrl_out)
 
-            # Combine controller output and read vector
             ntm_output = self.output_layer(torch.cat([ctrl_out, self.read_vector], dim=1))
-            outputs.append(ntm_output.unsqueeze(1))  # keep time dim
+            outputs.append(ntm_output.unsqueeze(1))
 
-        return torch.cat(outputs, dim=1)  # (batch, seq_len, output_size)
+        return torch.cat(outputs, dim=1)
