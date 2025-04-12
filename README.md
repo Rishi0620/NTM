@@ -1,4 +1,4 @@
-#Neural Turing Machine – Learning Algorithmic Tasks
+# Neural Turing Machine – Learning Algorithmic Tasks
 
 A PyTorch implementation of a **Neural Turing Machine (NTM)** – a neural network architecture augmented with differentiable memory and attention mechanisms – designed to learn algorithmic tasks such as **sorting, copying, reversing**, and **duplicating** sequences.
 
@@ -6,7 +6,7 @@ Built and trained locally on a MacBook Air (M2, CPU), this project demonstrates 
 
 ---
 
-##Project Goals
+## Project Goals
 
 - Implement a fully differentiable Neural Turing Machine from scratch
 - Train the model on algorithmic sequence transformation tasks
@@ -37,14 +37,14 @@ Multi-task learning was implemented using a **task token**, allowing a single mo
 
 ---
 
-###Requirements
+## #Requirements
 
 - Python 3.9+
 - PyTorch
 - NumPy
 - Matplotlib (for visualization)
 
-###Installation
+### Installation
 
 ```bash
 git clone https://github.com/yourusername/neural-turing-machine
