@@ -47,6 +47,6 @@ Multi-task learning was implemented using a **task token**, allowing a single mo
 ### Installation
 
 ```bash
-git clone https://github.com/yourusername/neural-turing-machine
+git clone https://github.com/Rishi0620/neural-turing-machine
 cd neural-turing-machine
 pip install -r requirements.txt
