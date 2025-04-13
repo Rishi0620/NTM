@@ -93,4 +93,4 @@ for epoch in tqdm(range(1, EPOCHS + 1)):
         print("Target:    ", y.squeeze().cpu().numpy())
         print("Prediction:", output.squeeze().detach().cpu().numpy())
 
-torch.save(base_ntm.state_dict(), f"ntm_translate_{args.task}.pth")
+
